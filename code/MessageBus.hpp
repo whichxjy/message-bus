@@ -5,32 +5,29 @@
 #include <map>
 #include <boost/any.hpp>
 
-using std::string;
-
 class MessageBus {
-
 private:
 	std::multimap<std::string, boost::any> container;
 	using Iter = std::multimap<std::string, boost::any>::iterator;
+
 public:
-	MessageBus();
+	//MessageBus();
+
 	/*禁止复制*/
 	MessageBus(const MessageBus&) = delete;
-	MessageBus(MessageBus&&) = delete;
+	MessageBus(MessageBus&& ) = delete;
 
 	/*添加消息*/
 	template <typename F>
-	void AddMsg(F&& func, const string& topic = "");
+	void AddMsg(F&& func, const std::string& topic = "");
 
 	/*删除消息*/
 	template <typename R, typename... Args>
-	void RemoveMsg(const string& topic = "");
+	void RemoveMsg(const std::string& topic = "");
 
 	/*发送消息*/
 	template <typename R, typename... Args>
-	void SendMsg(const string& topic = "");
-		
-
+	void SendMsg(const std::string& topic = "");
 
 };
 
