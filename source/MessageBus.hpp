@@ -13,19 +13,19 @@ private:
 public:
 	//MessageBus();
 
-	/*禁止复制*/
+	/*Copy is not allowed*/
 	MessageBus(const MessageBus&) = delete;
 	MessageBus(MessageBus&& ) = delete;
 
-	/*添加消息*/
+	/*Add message to message bus*/
 	template <typename F>
 	void AddMsg(F&& func, const std::string& topic = "");
 
-	/*删除消息*/
+	/*Delete Message(s) in Message Bus*/
 	template <typename R, typename... Args>
 	void RemoveMsg(const std::string& topic = "");
 
-	/*发送消息*/
+	/*Send message(s)*/
 	template <typename R, typename... Args>
 	void SendMsg(const std::string& topic = "");
 
