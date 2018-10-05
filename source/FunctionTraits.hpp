@@ -54,13 +54,6 @@ namespace func_traits {
 	: FunctionTraits<decltype(&T::operator())> {};
 	
 	//---------------------------------------------------------------------
-
-	//transform to function wrapper
-	template <typename F>
-	typename FunctionTraits<F>::function_wrapper_type 
-	ToFuncWrapper(const F& func) {
-		return static_cast<typename FunctionTraits<F>::function_wrapper_type>(func);
-	}	
 }
 
 #endif

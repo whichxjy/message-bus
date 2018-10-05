@@ -32,8 +32,8 @@ public:
 	//Add message to message bus
 	template <typename F>
 	void AddMsg(F&& func, const std::string& topic = "") {
-		auto funcWrapper = ToFuncWrapper(std::forward<F>(func));
 		using function_wrapper_type = typename FunctionTraits<F>::function_wrapper_type;
+		function_wrapper_type funcWrapper = func;
 		std::string tag = topic + typeid(funcWrapper).name();
 		container.emplace(std::move(tag), std::forward<function_wrapper_type>(funcWrapper));
 	}	
