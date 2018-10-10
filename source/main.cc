@@ -10,6 +10,12 @@ using std::string;
 using std::cout;
 using std::endl;
 
+/*****************************************
+ *                                       *
+ *       Publish-subscribe pattern       *
+ *                                       *
+ *****************************************/
+
 MessageBus MsgBus;
 const string TopicA = "Pink Floyd";
 const string TopicB = "Gorillaz";
