@@ -1,10 +1,12 @@
 # Message Bus
 
----
+## 项目简介
 
 该项目是一个使用C++实现的消息总线库。
 
-## 消息总线
+---
+
+ - **消息总线**
 
 消息总线（Message Bus）提供了一种对象之间的交流方式。在消息总线中，对象只通过消息联系，而不必有直接的依赖或关联。这种统一管理的方式能极大地降低对象之间的耦合性，同时提高程序的可维护性。
 
@@ -16,7 +18,7 @@
 
 ---
 
-## 发布/订阅模式
+ - **发布/订阅模式**
 
 该消息总线可用于实现发布/订阅模式。
 
@@ -28,14 +30,41 @@
 
 *（图片来源：参考③）*
 
+## 实现原理
+
+ - **消息的表示**：可调用对象（函数、函数指针、lambda表达式、bind创建的对象、重载了函数调用运算符的类、function标准库类型）可以看作是一种承载了具体内容的消息类型，对象之间可通过可调用对象传递信息。在本项目中，每个消息的类型由其Topic以及泛型函数类型（std::function<R(Args)>）共同确定。
+ - **消息的添加**：为了在消息总线中添加消息，我们需要传入消息的Topic以及一个泛型函数对象。当某Topic的消息发布时，调用对应的泛型函数。
+ - **消息的存储**：为了存储不同类型的消息，本项目使用“函数萃取”技术提取可调用对象的调用形式（call signature），然后使用 boost 库中的 any 类来擦出对象的类型。
+ - **消息的发布**：在发布消息时，发布者需要提供消息的主题（Topic）以及泛型函数对应的实参（如果需要的话）。消息总线会遍历消息列表，发布对应类型的消息。
+
+## 运行环境
+
+ - 本项目使用了 [boost 库][8] 的头文件，安装方法如下（以 Ubuntu 为例）：
+    
+```
+sudo apt-get install libboost-dev
+```
+
+## 使用示例
+```
+//创建消息总线
+MessageBus MsgBus;
+
+//添加消息（传入可调用对象以及主题Student）
+MsgBus.AddMsg([](int id){ cout << "Student ID: " << id << endl; } , "Student");
+
+//发布消息（发布 Student 主题的消息）
+MsgBus.SendMsg<void, int>(123, "Student");
+
+//删除消息（删除 Student 主题的消息）
+MsgBus.RemoveMsg<void, int>("Student");
+```
 
 
 
 
-
-
-
-[延伸：从人类社会的视角分析消息总线][8]
+## 延伸：
+[①从人类社会的视角分析消息总线][9]
 
 
   [1]: https://stackoverflow.com/questions/3987391/why-people-use-message-event-buses-in-their-code
@@ -45,4 +74,5 @@
   [5]: https://github.com/ServiceStack/ServiceStack.Redis/wiki/RedisPubSub
   [6]: https://hackernoon.com/observer-vs-pub-sub-pattern-50d3b27f838c
   [7]: https://github.com/whichxjy/MessageBus/blob/master/images/PubSub.gif
-  [8]: https://www.youtube.com/watch?v=hzKfabh8a68
+  [8]: https://www.boost.org/
+  [9]: https://www.youtube.com/watch?v=hzKfabh8a68
