@@ -60,11 +60,33 @@ MsgBus.SendMsg<void, int>(123, "Student");
 MsgBus.RemoveMsg<void, int>("Student");
 ```
 
+## 技术细节
 
+ - **函数萃取**
 
+该项目使用的函数萃取（Function traits）是一种特殊的 Traits class。
 
-## 延伸：
-[①从人类社会的视角分析消息总线][9]
+> 《Effective C++》条款47：Traits classes 使得“类型相关信息”在编译器可用。它们以 templates 和 “templates特化”完成实现。
+
+> 使用 Traits class 的方法：
+① 建立一组重载函数（身份像劳工）或函数模版，彼此间的差异只在于各自的 traits 参数。令每个函数实现码与其接受之 traits 信息相应和。
+② 建立一个控制函数（身份像工头）或函数模版，它调用上述那些“劳工函数”并传递 traits class 所提供的信息。
+
+[Function traits][9] 通过模版特例化和可变参数模版在编译期间获取函数类型。
+
+本项目中较难实现的是 lambda 表达式等可调用对象的类型萃取。当我们编写了一个 lambda 后，编译器将该表达式翻译成一个未命名类的未命名对象，该类中含有一个重载的函数调用运算符。当我们向 FunctionTraits<T>传入一个 lambda 表达式时，实际上是传入了一个类对象。然后利用模版特化 &T::operator() 得到指向成员函数的指针，最后使用特化模版 RetType(ClassType::*)(Args...)进行处理。其它可调用对象的处理方法与此相似。
+
+ - **any 类**
+
+[any 类][10]是 boost 库中的一个特殊容器，可以存放任何类型的值，在使用时可调用  [any_cast<T>][11]将对象还原为实际类型。 
+
+ - **转发和可变参数模版**
+
+《C++ Primer》中文版 p.624
+
+![Args][12]
+ 
+ 
 
 
   [1]: https://stackoverflow.com/questions/3987391/why-people-use-message-event-buses-in-their-code
@@ -75,4 +97,7 @@ MsgBus.RemoveMsg<void, int>("Student");
   [6]: https://hackernoon.com/observer-vs-pub-sub-pattern-50d3b27f838c
   [7]: https://github.com/whichxjy/MessageBus/blob/master/images/PubSub.gif
   [8]: https://www.boost.org/
-  [9]: https://www.youtube.com/watch?v=hzKfabh8a68
+  [9]: https://www.boost.org/doc/libs/1_41_0/libs/type_traits/doc/html/boost_typetraits/reference/function_traits.html
+  [10]: https://www.boost.org/doc/libs/1_61_0/doc/html/boost/any.html
+  [11]: https://www.boost.org/doc/libs/1_42_0/doc/html/boost/any_cast.html
+  [12]: https://github.com/whichxjy/MessageBus/blob/master/images/args.jpg
