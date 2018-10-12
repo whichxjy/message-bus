@@ -74,7 +74,7 @@ MsgBus.RemoveMsg<void, int>("Student");
 
 [Function traits][9] 通过模版特例化和可变参数模版在编译期间获取函数类型。
 
-本项目中较难实现的是 lambda 表达式等可调用对象的类型萃取。当我们编写了一个 lambda 后，编译器将该表达式翻译成一个未命名类的未命名对象，该类中含有一个重载的函数调用运算符。当我们向 FunctionTraits<T>传入一个 lambda 表达式时，实际上是传入了一个类对象。然后利用模版特化 &T::operator() 得到指向成员函数的指针，最后使用特化模版 RetType(ClassType::*)(Args...)进行处理。其它可调用对象的处理方法与此相似。
+本项目中较难实现的是 lambda 表达式等可调用对象的类型萃取。当我们编写了一个 lambda 后，编译器将该表达式翻译成一个未命名类的未命名对象，该类中含有一个重载的函数调用运算符。当我们向 FunctionTraits< T >传入一个 lambda 表达式时，实际上是传入了一个类对象。然后利用模版特化 &T::operator() 得到指向成员函数的指针，最后使用特化模版 RetType(ClassType::*)(Args...)进行处理。其它可调用对象的处理方法与此相似。
 
  - **any 类**
 
@@ -86,7 +86,9 @@ MsgBus.RemoveMsg<void, int>("Student");
 
 ![Args][12]
  
+ ## 延伸阅读
  
+ [Alan Kay On Messaging][13]
 
 
   [1]: https://stackoverflow.com/questions/3987391/why-people-use-message-event-buses-in-their-code
@@ -101,3 +103,4 @@ MsgBus.RemoveMsg<void, int>("Student");
   [10]: https://www.boost.org/doc/libs/1_61_0/doc/html/boost/any.html
   [11]: https://www.boost.org/doc/libs/1_42_0/doc/html/boost/any_cast.html
   [12]: https://github.com/whichxjy/MessageBus/blob/master/images/args.jpg
+  [13]: http://wiki.c2.com/?AlanKayOnMessaging
