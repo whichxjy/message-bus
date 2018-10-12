@@ -34,21 +34,21 @@ namespace func_traits {
 
 	//---------------------------------------------------------------------
 	
-	//pointer to member fuction or lambda or std::function<> or bind()
+	//pointer to member fuction
 	template <typename ClassType, typename RetType, typename... Args>
 	struct FunctionTraits<RetType(ClassType::*)(Args...)>
 	: FunctionTraitsHelper<RetType, Args...> {
 		using class_type = ClassType;
 	};
 
-	//(const version) pointer to member fuction or lambda or std::function<> or bind()
+	//(const version) pointer to member fuction
 	template <typename ClassType, typename RetType, typename... Args>
 	struct FunctionTraits<RetType(ClassType::*)(Args...) const>
 	: FunctionTraitsHelper<RetType, Args...> {
 		using class_type = ClassType;
 	};
 	
-	//Callable
+	//Callable (lambda or std::function<> or bind())
 	template <typename T>
 	struct FunctionTraits 
 	: FunctionTraits<decltype(&T::operator())> {};
