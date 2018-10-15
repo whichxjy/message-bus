@@ -66,7 +66,7 @@ MsgBus.RemoveMsg<void, int>("Student");
 
 该项目使用的函数萃取（Function traits）是一种特殊的 Traits class。
 
-> 《Effective C++》条款47：Traits classes 使得“类型相关信息”在编译器可用。它们以 templates 和 “templates特化”完成实现。
+> 《Effective C++》条款47：Traits classes 使得“类型相关信息”在编译期可用。它们以 templates 和 “templates特化”完成实现。
 
 > 使用 Traits class 的方法：
 ① 建立一组重载函数（身份像劳工）或函数模版，彼此间的差异只在于各自的 traits 参数。令每个函数实现码与其接受之 traits 信息相应和。
