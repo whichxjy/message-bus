@@ -20,13 +20,13 @@
 
  - **发布/订阅模式**
 
-该消息总线可用于实现发布/订阅模式。
+该消息总线可用于实现发布/订阅模式（[示例][4]）。
 
 发布/订阅模式（Publish–subscribe pattern）包含三个角色：主题（Topic），发布者（Publisher），订阅者（Subscriber）。发布者发送到Topic的消息，只有订阅了Topic的订阅者才会收到消息。每个系统可以有多个发布者，每个消息也可以有多个消费者（也即订阅者）。发布者和订阅者之间有时间上的依赖性：针对某个主题（Topic）的订阅者，它必须创建一个订阅者之后，才能消费发布者的消息。
 
-参考：[①维基百科的解释][4]  [②发布/订阅模式在Redis中的运用][5]  [③观察者模式 vs 发布/订阅模式][6]
+参考：[①维基百科的解释][5]  [②发布/订阅模式在Redis中的运用][6]  [③观察者模式 vs 发布/订阅模式][7]
 
-![Pub/Sub pattern][7]
+![Pub/Sub pattern][8]
 
 *（图片来源：参考③）*
 
@@ -39,7 +39,7 @@
 
 ## 运行环境
 
- - 本项目使用了 [boost 库][8] 的头文件，安装方法如下（以 Ubuntu 为例）：
+ - 本项目使用了 [boost 库][9] 的头文件，安装方法如下（以 Ubuntu 为例）：
     
 ```
 sudo apt-get install libboost-dev
@@ -72,35 +72,36 @@ MsgBus.RemoveMsg<void, int>("Student");
 ① 建立一组重载函数（身份像劳工）或函数模版，彼此间的差异只在于各自的 traits 参数。令每个函数实现码与其接受之 traits 信息相应和。
 ② 建立一个控制函数（身份像工头）或函数模版，它调用上述那些“劳工函数”并传递 traits class 所提供的信息。
 
-[Function traits][9] 通过模版特例化和可变参数模版在编译期间获取函数类型。
+[Function traits][10] 通过模版特例化和可变参数模版在编译期间获取函数类型。
 
 本项目中较难实现的是 lambda 表达式等可调用对象的类型萃取。当我们编写了一个 lambda 后，编译器将该表达式翻译成一个未命名类的未命名对象，该类中含有一个重载的函数调用运算符。当我们向 FunctionTraits< T >传入一个 lambda 表达式时，实际上是传入了一个类对象。然后利用模版特化 &T::operator() 得到指向成员函数的指针，最后使用特化模版 RetType(ClassType::*)(Args...)进行处理。其它可调用对象的处理方法与此相似。
 
  - **any 类**
 
-[any 类][10]是 boost 库中的一个特殊容器，可以存放任何类型的值，在使用时可调用  [any_cast<T>][11]将对象还原为实际类型。 
+[any 类][11]是 boost 库中的一个特殊容器，可以存放任何类型的值，在使用时可调用  [any_cast<T>][12] 将对象还原为实际类型。 
 
  - **转发和可变参数模版**
 
 《C++ Primer》中文版 p.624
 
-![Args][12]
+![Args][13]
  
  ## 延伸阅读
  
- [Alan Kay On Messaging][13]
+ [Alan Kay On Messaging][14]
 
 
   [1]: https://stackoverflow.com/questions/3987391/why-people-use-message-event-buses-in-their-code
   [2]: https://ardalis.com/bus-or-queue
   [3]: https://github.com/whichxjy/MessageBus/blob/master/images/Message-Bus.png
-  [4]: https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern
-  [5]: https://github.com/ServiceStack/ServiceStack.Redis/wiki/RedisPubSub
-  [6]: https://hackernoon.com/observer-vs-pub-sub-pattern-50d3b27f838c
-  [7]: https://github.com/whichxjy/MessageBus/blob/master/images/PubSub.gif
-  [8]: https://www.boost.org/
-  [9]: https://www.boost.org/doc/libs/1_41_0/libs/type_traits/doc/html/boost_typetraits/reference/function_traits.html
-  [10]: https://www.boost.org/doc/libs/1_61_0/doc/html/boost/any.html
-  [11]: https://www.boost.org/doc/libs/1_42_0/doc/html/boost/any_cast.html
-  [12]: https://github.com/whichxjy/MessageBus/blob/master/images/args.jpg
-  [13]: http://wiki.c2.com/?AlanKayOnMessaging
+  [4]: https://github.com/whichxjy/MessageBus/blob/master/source/example.cc
+  [5]: https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern
+  [6]: https://github.com/ServiceStack/ServiceStack.Redis/wiki/RedisPubSub
+  [7]: https://hackernoon.com/observer-vs-pub-sub-pattern-50d3b27f838c
+  [8]: https://github.com/whichxjy/MessageBus/blob/master/images/PubSub.gif
+  [9]: https://www.boost.org/
+  [10]: https://www.boost.org/doc/libs/1_41_0/libs/type_traits/doc/html/boost_typetraits/reference/function_traits.html
+  [11]: https://www.boost.org/doc/libs/1_61_0/doc/html/boost/any.html
+  [12]: https://www.boost.org/doc/libs/1_42_0/doc/html/boost/any_cast.html
+  [13]: https://github.com/whichxjy/MessageBus/blob/master/images/args.jpg
+  [14]: http://wiki.c2.com/?AlanKayOnMessaging
