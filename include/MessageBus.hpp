@@ -36,7 +36,7 @@ public:
         FunctionWrapperType func_wrapper = func;
         const std::string tag = topic + typeid(func_wrapper).name();
         container.emplace(std::move(tag), std::forward<FunctionWrapperType>(func_wrapper));
-    }    
+    }
 
     // remove nodes that are listening to the given topic and have the given call signature
     template <typename RetType, typename... Args>
