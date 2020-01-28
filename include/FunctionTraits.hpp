@@ -7,9 +7,9 @@ namespace func_traits {
     // helper
     template <typename RetType, typename... Args>
     struct FunctionTraitsHelper {
-        using return_type = RetType;
-        using function_type = RetType(Args...);
-        using function_wrapper_type = std::function<function_type>;
+        using ReturnType = RetType;
+        using FunctionType = RetType(Args...);
+        using FunctionWrapperType = std::function<FunctionType>;
     };
 
     template <typename T>
@@ -35,17 +35,17 @@ namespace func_traits {
     //---------------------------------------------------------------------
     
     // pointer to member fuction
-    template <typename ClassType, typename RetType, typename... Args>
-    struct FunctionTraits<RetType(ClassType::*)(Args...)>
+    template <typename CType, typename RetType, typename... Args>
+    struct FunctionTraits<RetType(CType::*)(Args...)>
     : FunctionTraitsHelper<RetType, Args...> {
-        using class_type = ClassType;
+        using ClassType = CType;
     };
 
     // (const version) pointer to member fuction
-    template <typename ClassType, typename RetType, typename... Args>
-    struct FunctionTraits<RetType(ClassType::*)(Args...) const>
+    template <typename CType, typename RetType, typename... Args>
+    struct FunctionTraits<RetType(CType::*)(Args...) const>
     : FunctionTraitsHelper<RetType, Args...> {
-        using class_type = ClassType;
+        using ClassType = CType;
     };
     
     // callable (lambda or std::function<> or bind())
