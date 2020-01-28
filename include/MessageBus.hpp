@@ -31,56 +31,56 @@ public:
 
     // add message to message bus
     template <typename F>
-    void addMessage(F&& func, const std::string& topic = "") {
-        using function_wrapper_type = typename FunctionTraits<F>::function_wrapper_type;
-        function_wrapper_type funcWrapper = func;
-        std::string tag = topic + typeid(funcWrapper).name();
-        container.emplace(std::move(tag), std::forward<function_wrapper_type>(funcWrapper));
+    void create(const std::string& topic, F&& func) {
+        using FunctionWrapperType = typename FunctionTraits<F>::FunctionWrapperType;
+        FunctionWrapperType func_wrapper = func;
+        const std::string tag = topic + typeid(func_wrapper).name();
+        container.emplace(std::move(tag), std::forward<FunctionWrapperType>(func_wrapper));
     }    
 
     // delete messages in Message Bus
     template <typename RetType, typename... Args>
-    void removeMessage(const std::string& topic = "") {
-        using function_wrapper_type = std::function<RetType(Args...)>;
-        std::string removeTag = topic + typeid(function_wrapper_type).name();
-        auto removeRange = container.equal_range(removeTag);
-        if (removeRange.first == removeRange.second) {
-            std::cout << "Message not found." << std::endl;
+    void remove(const std::string& topic) {
+        using FunctionWrapperType = std::function<RetType(Args...)>;
+        const std::string remove_tag = topic + typeid(FunctionWrapperType).name();
+        auto remove_range = container.equal_range(remove_tag);
+        if (remove_range.first == remove_range.second) {
+            std::cout << "Node not found." << std::endl;
         }
         else {
-            container.erase(removeRange.first, removeRange.second);
+            container.erase(remove_range.first, remove_range.second);
         }
     }
 
     // send messages without argument
     template <typename RetType>
-    void sendMessage(const std::string& topic = "") {
-        using function_wrapper_type = std::function<RetType()>;
-        std::string sendTag = topic + typeid(function_wrapper_type).name();
-        auto sendRange = container.equal_range(sendTag);
-        if (sendRange.first == sendRange.second) {
-            std::cout << "Message not found." << std::endl;
+    void push(const std::string& topic) {
+        using FunctionWrapperType = std::function<RetType()>;
+        const std::string push_tag = topic + typeid(FunctionWrapperType).name();
+        auto send_range = container.equal_range(push_tag);
+        if (send_range.first == send_range.second) {
+            std::cout << "Node not found." << std::endl;
             return;
         }
-        for (Iter it = sendRange.first; it != sendRange.second; ++it) {
-            function_wrapper_type funcWrapper = boost::any_cast<function_wrapper_type>(it->second);
-            funcWrapper();
+        for (Iter it = send_range.first; it != send_range.second; ++it) {
+            FunctionWrapperType func_wrapper = boost::any_cast<FunctionWrapperType>(it->second);
+            func_wrapper();
         }
     }
 
     // send messages with arguments
     template <typename RetType, typename... Args>
-    void sendMessage(Args&&... args, const std::string& topic = "") {
-        using function_wrapper_type = std::function<RetType(Args...)>;
-        std::string sendTag = topic + typeid(function_wrapper_type).name();
-        auto sendRange = container.equal_range(sendTag);
-        if (sendRange.first == sendRange.second) {
-            std::cout << "Message not found." << std::endl;
+    void push(const std::string& topic, Args&&... args) {
+        using FunctionWrapperType = std::function<RetType(Args...)>;
+        const std::string push_tag = topic + typeid(FunctionWrapperType).name();
+        auto send_range = container.equal_range(push_tag);
+        if (send_range.first == send_range.second) {
+            std::cout << "Node not found." << std::endl;
             return;
         }
-        for (Iter it = sendRange.first; it != sendRange.second; ++it) {
-            function_wrapper_type funcWrapper = boost::any_cast<function_wrapper_type>(it->second);
-            funcWrapper(std::forward<Args>(args)...);
+        for (Iter it = send_range.first; it != send_range.second; ++it) {
+            FunctionWrapperType func_wrapper = boost::any_cast<FunctionWrapperType>(it->second);
+            func_wrapper(std::forward<Args>(args)...);
         }
     }
 };
