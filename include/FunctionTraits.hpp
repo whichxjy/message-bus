@@ -19,21 +19,21 @@ namespace func_traits {
 
     // normal function
     template <typename RetType, typename... Args>
-    struct FunctionTraits<RetType(Args...)> 
+    struct FunctionTraits<RetType(Args...)>
     : FunctionTraitsHelper<RetType, Args...> {};
 
     // function pointer
     template <typename RetType, typename... Args>
-    struct FunctionTraits<RetType(*)(Args...)> 
+    struct FunctionTraits<RetType(*)(Args...)>
     : FunctionTraitsHelper<RetType, Args...> {};
 
     // function reference
     template <typename RetType, typename... Args>
-    struct FunctionTraits<RetType(&)(Args...)> 
+    struct FunctionTraits<RetType(&)(Args...)>
     : FunctionTraitsHelper<RetType, Args...> {};
 
     //---------------------------------------------------------------------
-    
+
     // pointer to member fuction
     template <typename CType, typename RetType, typename... Args>
     struct FunctionTraits<RetType(CType::*)(Args...)>
@@ -47,10 +47,10 @@ namespace func_traits {
     : FunctionTraitsHelper<RetType, Args...> {
         using ClassType = CType;
     };
-    
+
     // callable (lambda or std::function<> or bind())
     template <typename T>
-    struct FunctionTraits 
+    struct FunctionTraits
     : FunctionTraits<decltype(&T::operator())> {};
 }
 
