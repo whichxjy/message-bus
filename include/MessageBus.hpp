@@ -29,7 +29,7 @@ public:
     // use the synthesized destructor
     ~MessageBus() = default;
 
-    // add message to message bus
+    // create a node with a topic and a callback function
     template <typename F>
     void create(const std::string& topic, F&& func) {
         using FunctionWrapperType = typename FunctionTraits<F>::FunctionWrapperType;
@@ -38,7 +38,7 @@ public:
         container.emplace(std::move(tag), std::forward<FunctionWrapperType>(func_wrapper));
     }    
 
-    // delete messages in Message Bus
+    // remove nodes that are listening to the given topic and have the given call signature
     template <typename RetType, typename... Args>
     void remove(const std::string& topic) {
         using FunctionWrapperType = std::function<RetType(Args...)>;
@@ -52,7 +52,7 @@ public:
         }
     }
 
-    // send messages without argument
+    // send messages to nodes without argument
     template <typename RetType>
     void push(const std::string& topic) {
         using FunctionWrapperType = std::function<RetType()>;
@@ -68,7 +68,7 @@ public:
         }
     }
 
-    // send messages with arguments
+    // send messages to nodes with arguments
     template <typename RetType, typename... Args>
     void push(const std::string& topic, Args&&... args) {
         using FunctionWrapperType = std::function<RetType(Args...)>;
